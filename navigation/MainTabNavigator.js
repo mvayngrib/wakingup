@@ -1,86 +1,43 @@
 import React from 'react'
+// import PropTypes from 'prop-types'
 import { Platform } from 'react-native'
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation'
 
-import TabBarIcon from '../components/TabBarIcon'
-import HomeScreen from '../screens/HomeScreen'
-import LinksScreen from '../screens/LinksScreen'
-import SettingsScreen from '../screens/SettingsScreen'
-import CardsScreen from '../screens/CardsScreen'
+import Home from './Home'
+import Lessons from './Lessons'
+import Meditation from './Meditation'
+import Timer from './Timer'
+import theme from '../theme'
 
-const config = Platform.select({
-  web: { headerMode: 'screen' },
-  default: {},
-})
-
-const HomeStack = createStackNavigator(
+const tabNavigator = createBottomTabNavigator(
   {
-    Home: HomeScreen,
+    Home,
+    Lessons,
+    Meditation,
+    Timer,
   },
-  config
-)
-
-HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
-    />
-  ),
-}
-
-HomeStack.path = ''
-
-const LinksStack = createStackNavigator(
   {
-    Links: LinksScreen,
-  },
-  config
+    initialRouteName: 'Home',
+    defaultNavigationOptions: {
+      // headerLeftContainerStyle: {
+      //   alignItems: 'center',
+      //   marginLeft: theme.sizes.margin,
+      // },
+      // headerRightContainerStyle: {
+      //   alignItems: 'center',
+      //   marginRight: theme.sizes.margin,
+      // },
+      // headerBackTitle: null,
+      // headerBackImage: <Icon name="close" />,
+      // headerBackImage: <Icon name="back" />,
+    },
+    tabBarOptions: {
+      activeTintColor: theme.colors.tabSelected,
+      inactiveTintColor: theme.colors.tabUnselected,
+      // allowFontScaling: false,
+    },
+  }
 )
-
-LinksStack.navigationOptions = {
-  tabBarLabel: 'Links',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'} />
-  ),
-}
-
-LinksStack.path = ''
-
-const SettingsStack = createStackNavigator(
-  {
-    Settings: SettingsScreen,
-  },
-  config
-)
-
-SettingsStack.navigationOptions = {
-  tabBarLabel: 'Settings',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'} />
-  ),
-}
-
-SettingsStack.path = ''
-
-CardsScreen.navigationOptions = {
-  tabBarLabel: 'Cards',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-wallet' : 'md-wallet'} />
-  ),
-}
-
-const tabNavigator = createBottomTabNavigator({
-  CardsScreen,
-  HomeStack,
-  LinksStack,
-  SettingsStack,
-})
 
 tabNavigator.path = ''
 
