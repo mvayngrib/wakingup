@@ -1,10 +1,10 @@
 import React from 'react'
 import styled from 'shakl'
-import Screen from 'components/Screen'
-import Header from 'components/Header'
-import Body from 'components/Body'
-import Footer from 'components/Footer'
-import { P, H1, H2 } from 'components/Text'
+import Screen from '~/components/Screen'
+import Header from '~/components/Header'
+import Body from '~/components/Body'
+import Footer from '~/components/Footer'
+import { P, H1, H2 } from '~/components/Text'
 import PropTypes from '~/constants/prop-types'
 
 const MeditationScreen = (props) => {

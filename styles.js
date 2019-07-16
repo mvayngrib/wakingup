@@ -2,25 +2,18 @@ import { StyleSheet } from 'react-native'
 import theme from '~/theme'
 
 const defaultTextStyle = {
-  fontFamily: 'Cera Pro',
-  fontWeight: 'bold',
+  // fontFamily: 'OpenSans',
 }
 
 const base = StyleSheet.create({
   full: {
     flex: 1,
   },
-  top: {
-    justifyContent: 'flex-start',
+  spaceBetween: {
+    justifyContent: 'space-between',
   },
-  left: {
-    justifyContent: 'flex-start',
-  },
-  bottom: {
-    justifyContent: 'flex-end',
-  },
-  right: {
-    justifyContent: 'flex-end',
+  spaceAround: {
+    justifyContent: 'space-around',
   },
   vertical: {
     flexDirection: 'column',
@@ -35,12 +28,24 @@ const base = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  fixed: {
+    position: 'absolute',
+  },
   stretch: {
     alignSelf: 'stretch',
+  },
+  alignStart: {
+    alignSelf: 'flex-start',
+  },
+  alignEnd: {
+    alignSelf: 'flex-end',
   },
   screen: {
     flex: 1,
     marginHorizontal: theme.sizes.margin,
+  },
+  roundedCorners: {
+    borderRadius: 10,
   },
 })
 
@@ -50,6 +55,9 @@ const bg = StyleSheet.create({
   },
   black: {
     backgroundColor: theme.colors.black,
+  },
+  transparent: {
+    backgroundColor: 'transparent',
   },
   gray: {
     backgroundColor: theme.colors.gray,
@@ -110,6 +118,9 @@ const text = StyleSheet.create({
   small: {
     fontSize: theme.fontSizes.small,
   },
+  large: {
+    fontSize: theme.fontSizes.large,
+  },
   regular: {
     fontWeight: 'normal',
   },
@@ -117,13 +128,19 @@ const text = StyleSheet.create({
     fontWeight: 'bold',
   },
   semibold: {
-    fontWeight: '500',
+    fontWeight: '600',
   },
   medium: {
     fontWeight: '500',
   },
   light: {
     fontWeight: '200',
+  },
+  left: {
+    textAlign: 'left',
+  },
+  right: {
+    textAlign: 'right',
   },
   center: {
     textAlign: 'center',

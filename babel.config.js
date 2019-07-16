@@ -8,12 +8,10 @@ module.exports = function(api) {
         {
           root: './',
           alias: {
-            '#': './modules',
             '~': './',
             images: './assets/images/png',
             components: './components',
-            screens: './screens',
-            '~/constants/prop-types': './constants/prop-types',
+            containers: './containers',
           },
         },
       ],

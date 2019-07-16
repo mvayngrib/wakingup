@@ -3,15 +3,15 @@ import PropTypes from '~/constants/prop-types'
 import { FlatList } from 'react-native'
 import Item from './CardStripItem'
 
-const CardStrip = ({ items, onSelect }) => {
+const CardStrip = ({ items, onSelect, itemStyle }) => {
   return (
     <FlatList
       showsHorizontalScrollIndicator={false}
       horizontal
       data={items}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item) => item.title}
       renderItem={({ item, index }) => {
-        return <Item {...item} onPress={() => onSelect(index)} />
+        return <Item {...item} style={itemStyle} onPress={() => onSelect(index)} />
       }}
     />
   )

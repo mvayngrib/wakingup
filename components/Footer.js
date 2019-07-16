@@ -1,8 +1,10 @@
+import React from 'react'
 import styled from 'shakl'
-import { H1 } from 'components/Text'
+import SafeBlock from 'components/SafeBlock'
 
-export default styled
-  .View({
-    justifyContent: 'flex-end',
-  })
-  .withChild(H1)
+// TODO
+export default styled(SafeBlock)().attrs({
+  fixed: true,
+  bottom: 0,
+  horizontal: true,
+})

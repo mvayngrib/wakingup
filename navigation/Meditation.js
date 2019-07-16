@@ -1,7 +1,7 @@
 import React from 'react'
 import { createStackNavigator } from 'react-navigation'
-import MeditationScreen from 'screens/MeditationScreen'
-import TabBarIcon from 'components/Icon'
+import MeditationScreen from '~/containers/MeditationScreen'
+import TabBarIcon from '~/components/TabIcon'
 import config from './config'
 
 const MeditationStack = createStackNavigator(

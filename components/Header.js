@@ -1,8 +1,7 @@
-import styled from 'shakl'
-import { H1 } from 'components/Text'
+import Block from '~/components/Block'
 
-export default styled
-  .View({
-    justifyContent: 'flex-start',
-  })
-  .withChild(H1)
+export default Block.withProps({
+  fixed: true,
+  top: 0,
+  horizontal: true,
+})

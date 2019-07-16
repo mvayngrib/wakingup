@@ -5,5 +5,7 @@
   "editor.detectIndentation": true,
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
-  "files.trimTrailingWhitespace": true
+  "files.trimTrailingWhitespace": true,
+  "eslint.alwaysShowStatus": false,
+  // "eslint.autoFixOnSave": false
 }

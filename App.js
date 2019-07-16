@@ -1,13 +1,25 @@
 import { AppLoading } from 'expo'
-import { Asset } from 'expo-asset'
+import { Audio } from 'expo-av'
+// import { Asset } from 'expo-asset'
 import * as Font from 'expo-font'
 import React, { useState } from 'react'
 import { Platform, StatusBar, StyleSheet, View } from 'react-native'
+import Player from './components/Player'
 import { Ionicons } from '@expo/vector-icons'
 
-import AppNavigator from './navigation/AppNavigator'
+Audio.setAudioModeAsync({
+  staysActiveInBackground: true,
+  allowsRecordingIOS: false,
+  playsInSilentModeIOS: true,
+  interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_MIX_WITH_OTHERS,
+  shouldDuckAndroid: true,
+  interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS,
+  playThroughEarpieceAndroid: true,
+}).catch((err) => {
+  console.error('audio could not be enabled', err)
+})
 
-StyleSheet.setStyleAttributePreprocessor('fontFamily', Font.processFontFamily)
+// StyleSheet.setStyleAttributePreprocessor('fontFamily', Font.processFontFamily)
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false)
@@ -20,33 +32,24 @@ export default function App(props) {
         onFinish={() => handleFinishLoading(setLoadingComplete)}
       />
     )
-  } else {
-    return (
-      <View style={styles.container}>
-        {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-        <AppNavigator />
-      </View>
-    )
   }
+
+  return (
+    <View style={styles.container}>
+      {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+      <Player />
+    </View>
+  )
 }
 
 async function loadResourcesAsync() {
   await Promise.all([
-    Asset.loadAsync([
-      require('./assets/images/robot-dev.png'),
-      require('./assets/images/robot-prod.png'),
-      require('./assets/images/lesson_0.jpeg'),
-      require('./assets/images/lesson_1.jpeg'),
-      require('./assets/images/lesson_2.jpeg'),
-      require('./assets/images/lesson_3.jpeg'),
-      require('./assets/images/lesson_4.jpeg'),
-    ]),
     Font.loadAsync({
       // This is the font that we are using for our tab bar
       ...Ionicons.font,
-      'Cera Pro Light': require('./assets/fonts/Cera Pro Light.otf'),
-      'Cera Pro Regular': require('./assets/fonts/Cera Pro Regular.otf'),
-      'Cera Pro Bold': require('./assets/fonts/Cera Pro Bold.otf'),
+      'lato-light': require('./assets/fonts/Lato-Light.ttf'),
+      'lato-regular': require('./assets/fonts/Lato-Regular.ttf'),
+      'lato-bold': require('./assets/fonts/Lato-Bold.ttf'),
     }),
   ])
 }
@@ -64,6 +67,6 @@ function handleFinishLoading(setLoadingComplete) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'transparent',
   },
 })

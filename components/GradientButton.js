@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native'
 import styled from 'shakl'
-import LinearGradient from 'components/LinearGradient'
-import Button from 'components/Button'
+import LinearGradient from '~/components/LinearGradient'
+import Button from '~/components/Button'
 import { interpretProps } from '~/utils/interpret-style-props'
 import PropTypes from '~/constants/prop-types'
 

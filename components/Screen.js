@@ -1,7 +1,10 @@
-import styled from 'shakl'
 import theme from '~/theme'
+import Block from './Block'
 
-export default styled.View({
-  flex: 1,
-  marginHorizontal: theme.sizes.margin,
+export default Block.withProps({
+  full: true,
+  paddingHorizontal: theme.sizes.margin,
+  white: true,
+  borderTopLeftRadius: 10,
+  borderTopRightRadius: 10,
 })

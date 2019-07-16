@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 // import PropTypes from 'prop-types'
 import { Platform } from 'react-native'
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation'
@@ -8,6 +8,8 @@ import Lessons from './Lessons'
 import Meditation from './Meditation'
 import Timer from './Timer'
 import theme from '../theme'
+import modalTransition from './modal-transition'
+import Lesson from '~/containers/Lesson'
 
 const tabNavigator = createBottomTabNavigator(
   {
@@ -19,6 +21,7 @@ const tabNavigator = createBottomTabNavigator(
   {
     initialRouteName: 'Home',
     defaultNavigationOptions: {
+      // header: null,
       // headerLeftContainerStyle: {
       //   alignItems: 'center',
       //   marginLeft: theme.sizes.margin,
@@ -41,4 +44,32 @@ const tabNavigator = createBottomTabNavigator(
 
 tabNavigator.path = ''
 
-export default tabNavigator
+const modalNavigator = createStackNavigator(
+  {
+    Main: tabNavigator,
+    Modal: {
+      screen: (props) => {
+        const { params } = props.navigation.state
+        if (params.screen === 'Lesson') {
+          return <Lesson {...props} onClose={useCallback(() => props.navigation.goBack())} />
+        }
+      },
+    },
+  },
+  {
+    mode: 'modal',
+    defaultNavigationOptions: {
+      header: null,
+    },
+    // otherwise borderRadius unveils StackViewCard default backgroundColor (white)
+    transparentCard: true,
+    transitionConfig: () => ({
+      screenInterpolator: modalTransition,
+      containerStyle: {
+        backgroundColor: '#000',
+      },
+    }),
+  }
+)
+
+export default modalNavigator

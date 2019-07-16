@@ -1,6 +1,6 @@
 import styled from 'shakl'
-import MediaContainer from 'components/MediaContainer'
-import Icon from 'components/Icon'
+import MediaContainer from '~/components/MediaContainer'
+import Icon from '~/components/Icon'
 import theme from '~/theme'
 import { Text } from './Text'
 

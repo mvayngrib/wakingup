@@ -1,12 +1,12 @@
 import React from 'react'
 import PropTypes from '~/constants/prop-types'
 import styled from 'shakl'
-import Screen from 'components/Screen'
-import Header from 'components/Header'
-import Body from 'components/Body'
-import Footer from 'components/Footer'
-import { P, H1, H2 } from 'components/Text'
-import GradientButton from 'components/GradientButton'
+import Screen from '~/components/Screen'
+import Header from '~/components/Header'
+import Body from '~/components/Body'
+import Footer from '~/components/Footer'
+import { P, H1, H2 } from '~/components/Text'
+import GradientButton from '~/components/GradientButton'
 
 const Button = styled(GradientButton)().attrs({
   gradientColors: ['#4478F2', '#30AFE8'],

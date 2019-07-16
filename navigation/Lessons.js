@@ -1,7 +1,7 @@
 import React from 'react'
 import { createStackNavigator } from 'react-navigation'
-import LessonsScreen from 'screens/LessonsScreen'
-import TabBarIcon from 'components/Icon'
+import LessonsScreen from '~/containers/LessonsScreen'
+import TabBarIcon from '~/components/TabIcon'
 import config from './config'
 
 const LessonsStack = createStackNavigator(

@@ -1,25 +1,23 @@
 import React from 'react'
 import { createStackNavigator } from 'react-navigation'
-import HomeScreen from 'screens/Home'
-import TabBarIcon from 'components/Icon'
-import theme from '~/theme'
-import config from './config'
+import Home from '~/containers/Home'
+import TabBarIcon from '~/components/TabIcon'
 
 const HomeStack = createStackNavigator(
   {
-    Home: HomeScreen,
+    Home,
   },
   {
-    ...config,
-    tabBarLabel: 'HOME',
     defaultNavigationOptions: {
-      headerStyle: {
-        height: 70,
-        backgroundColor: theme.colors.white,
-        borderBottomColor: 'transparent',
-        elevation: 0, // for android
-      },
+      header: null,
     },
+    transparentCard: true,
+    transitionConfig: () => ({
+      // otherwise borderRadius unveils StackViewCard default backgroundColor (white)
+      containerStyle: {
+        backgroundColor: 'transparent',
+      },
+    }),
   }
 )
 
