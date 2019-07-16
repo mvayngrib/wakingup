@@ -7,5 +7,5 @@
   "files.trimFinalNewlines": true,
   "files.trimTrailingWhitespace": true,
   "eslint.alwaysShowStatus": false,
-  // "eslint.autoFixOnSave": false
+  "eslint.autoFixOnSave": true
 }

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import styled from 'shakl'
 import Slider from 'react-native-slider'
 import Block from 'components/Block'
@@ -47,9 +47,11 @@ const PlayPauseContainer = styled(LinearGradient)(({ radius }) => ({
 }))
 
 const Player = React.memo(({ source }) => {
-  const { state, play, pause, startSeeking, seekTo, stopSeeking, scanBack, scanForward } = useAudio(
-    source
-  )
+  const { state, play, pause, startSeeking, seekTo, stopSeeking, scanBack, scanForward } = useAudio({
+    source,
+    onError: console.error
+  })
+
   const { isLoading, isPlaying, sliderPosition } = state
   const PlayPause = isPlaying ? Pause : Play
   return (
