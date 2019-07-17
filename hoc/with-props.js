@@ -8,6 +8,7 @@ export const withProps = (overrides) => (Comp) => {
 
 export const makeExtendable = (Comp) => {
   Comp.withProps = getWithProps(Comp)
+  return Comp
 }
 
 const getWithProps = (Comp) => (overrides) => {

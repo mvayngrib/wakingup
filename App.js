@@ -4,8 +4,13 @@ import { Audio } from 'expo-av'
 import * as Font from 'expo-font'
 import React, { useState } from 'react'
 import { Platform, StatusBar, StyleSheet, View } from 'react-native'
-import Player from './components/Player'
+import { Provider } from 'react-redux'
 import { Ionicons } from '@expo/vector-icons'
+
+// import Firebase from '~/containers/Firebase'
+import { setTopLevelNavigator } from '~/navigation'
+import AppNavigator from '~/navigation/AppNavigator'
+import store from '~/store'
 
 Audio.setAudioModeAsync({
   staysActiveInBackground: true,
@@ -37,7 +42,9 @@ export default function App(props) {
   return (
     <View style={styles.container}>
       {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-      <Player />
+      <Provider store={store}>
+        <AppNavigator ref={setTopLevelNavigator} />
+      </Provider>
     </View>
   )
 }

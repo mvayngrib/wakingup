@@ -3,7 +3,8 @@ const lessons = [
     id: '0',
     title: 'The Logic of Practice',
     subtitle: '6 minutes, 38 seconds',
-    image: require('../assets/images/lesson_0.jpeg'),
+    image:
+      'https://firebasestorage.googleapis.com/v0/b/practice-b5af6.appspot.com/o/lessons%2Flesson_2.jpeg?alt=media&token=43a2ffca-f57b-4405-b34f-11712125dfe1',
   },
   {
     id: '1',

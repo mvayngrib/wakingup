@@ -1,9 +1,11 @@
 import React from 'react'
 import { View, SafeAreaView } from 'react-native'
 import Styles from '~/styles'
+import { makeExtendable } from '~/hoc/with-props'
 
 const Block = ({
   flex,
+  flexShrink,
   width,
   height,
   bottom,
@@ -38,6 +40,10 @@ const Block = ({
   transparent,
   safe,
   justifyContent,
+  marginTop,
+  marginBottom,
+  marginLeft,
+  marginRight,
   style,
   ...props
 }) => {
@@ -62,6 +68,7 @@ const Block = ({
     transparent && Styles.bg.transparent,
     // overrides
     flex != null && { flex },
+    flexShrink != null && { flexShrink },
     width != null && { width },
     height != null && { height },
     bottom != null && { bottom },
@@ -78,6 +85,10 @@ const Block = ({
     borderColor && { borderColor },
     backgroundColor && { backgroundColor },
     justifyContent != null && { justifyContent },
+    marginTop != null && { marginTop },
+    marginBottom != null && { marginBottom },
+    marginLeft != null && { marginLeft },
+    marginRight != null && { marginRight },
     style,
   ]
 
@@ -86,6 +97,6 @@ const Block = ({
   return <Comp style={styles} {...props} />
 }
 
-Block.withProps = (defaults) => (props) => <Block {...defaults} {...props} />
+makeExtendable(Block)
 
 export default Block

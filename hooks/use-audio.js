@@ -1,5 +1,6 @@
 import { useReducer, useCallback, useEffect, useRef } from 'react'
 import useToggle from './use-toggle'
+import createCancelGuard from './guard-cancel'
 import Audio from '~/modules/audio'
 
 const DEFAULT_SCAN_MILLIS = 15000
@@ -27,8 +28,9 @@ const DEBOUNCE_SEEK_MILLIS = 100
 // }
 
 const warn = (err) => console.warn(err)
-const toSliderPosition = ({ position, duration }) => Math.floor((1000 * position) / duration) / 1000
-const toPosition = ({ sliderPosition, duration }) => Math.floor(sliderPosition * duration)
+const toProgress = ({ position, duration }) => Math.floor((1000 * position) / duration) / 1000
+const toPosition = ({ progress, duration }) => Math.floor(progress * duration)
+const createFSAFactory = (dispatch) => (type) => (payload) => dispatch({ type, payload })
 
 const updateWithStatus = (state, status) => {
   const {
@@ -56,7 +58,7 @@ const updateWithStatus = (state, status) => {
       update.position = positionMillis
     }
 
-    update.sliderPosition = toSliderPosition(update)
+    update.progress = toProgress(update)
   }
 
   if (didJustFinish) {
@@ -110,7 +112,7 @@ const useAudioReducer = () => {
         case 'seek_to':
           return {
             ...state,
-            sliderPosition: payload,
+            progress: payload,
           }
         case 'play_if_was_playing_when_seek_started':
           if (typeof state.wasPlayingWhenSeekStarted !== 'boolean') {
@@ -133,23 +135,25 @@ const useAudioReducer = () => {
       duration: Infinity,
       position: 0,
       manualPosition: 0,
-      sliderPosition: 0,
+      progress: 0,
       // tri-state bools to allow skipping first render (null, true, false)
       isPlaying: null,
       isSeeking: null,
       wasPlayingWhenSeekStarted: null,
+      isUnmounted: false,
     }
   )
 
-  const pause = () => dispatch({ type: 'pause' })
-  const play = () => dispatch({ type: 'play' })
-  const startSeeking = (position) => dispatch({ type: 'seek_start', payload: position })
-  const stopSeeking = () => dispatch({ type: 'seek_stop' })
-  const seekTo = (position) => dispatch({ type: 'seek_to', payload: position })
-  const setStatus = (payload) => dispatch({ type: 'status', payload })
-  const setSound = (payload) => dispatch({ type: 'sound', payload })
-  const playIfWasPlayingWhenSeekStarted = () =>
-    dispatch({ type: 'play_if_was_playing_when_seek_started' })
+  const createAction = createFSAFactory(dispatch)
+
+  const pause = createAction('pause')
+  const play = createAction('play')
+  const startSeeking = createAction('seek_start')
+  const stopSeeking = createAction('seek_stop')
+  const seekTo = createAction('seek_to')
+  const setStatus = createAction('status')
+  const setSound = createAction('sound')
+  const playIfWasPlayingWhenSeekStarted = createAction('play_if_was_playing_when_seek_started')
 
   return {
     state,
@@ -164,7 +168,7 @@ const useAudioReducer = () => {
   }
 }
 
-export default ({ source, onError = warn }) => {
+export default ({ source, onError = warn, onPlay, onPause }) => {
   const {
     state,
     play,
@@ -177,19 +181,23 @@ export default ({ source, onError = warn }) => {
     playIfWasPlayingWhenSeekStarted,
   } = useAudioReducer()
 
-  const { isLoading, isPlaying, isSeeking, sound, duration, sliderPosition } = state
+  const { isLoading, isPlaying, isSeeking, sound, duration, progress } = state
   const [cacheBuster, bustCache] = useToggle(null)
+  const { isCanceled, guard } = createCancelGuard()
 
   // init and destroy
   useEffect(() => {
-    const promise = Audio.create(source, { shouldPlay: false }, setStatus)
-    promise.then(({ sound, status }) => {
-      setSound(sound)
-      setStatus(status)
-    })
+    const promise = Audio.create(source, { shouldPlay: false }, guard(setStatus))
+    promise.then(
+      guard(({ sound, status }) => {
+        setSound(sound)
+        setStatus(status)
+      })
+    )
 
     return () => {
-      promise.then(({ sound }) => sound.unload().catch(onError))
+      clearTimeout(seekTimeoutRef.current)
+      promise.then(({ sound }) => sound.unload().catch(console.error))
     }
   }, [])
 
@@ -197,9 +205,9 @@ export default ({ source, onError = warn }) => {
   useEffect(() => {
     if (!isLoading && typeof isPlaying === 'boolean') {
       if (isPlaying) {
-        sound.play().catch(onError)
+        sound.play().then(guard(onPlay), guard(onError))
       } else {
-        sound.pause().catch(onError)
+        sound.pause().then(guard(onPause), guard(onError))
       }
     }
   }, [sound, isPlaying, isLoading])
@@ -207,16 +215,16 @@ export default ({ source, onError = warn }) => {
   // rewind a bit
   const scan = useCallback(
     (millis = DEFAULT_SCAN_MILLIS, reverse) => {
-      if (sound) {
-        const newPosition = reverse
-          ? Math.max(0, toPosition({ sliderPosition, duration }) - millis)
-          : Math.min(duration, toPosition({ sliderPosition, duration }) + millis)
+      if (!sound) return
 
-        seekTo(newPosition / duration)
-        bustCache()
-      }
+      const newPosition = reverse
+        ? Math.max(0, toPosition({ progress, duration }) - millis)
+        : Math.min(duration, toPosition({ progress, duration }) + millis)
+
+      seekTo(newPosition / duration)
+      bustCache()
     },
-    [duration, sliderPosition, sound]
+    [duration, progress, sound]
   )
 
   const scanForward = scan
@@ -228,7 +236,9 @@ export default ({ source, onError = warn }) => {
   const seekTo = useCallback((value) => {
     seekRef.current = value
     clearTimeout(seekTimeoutRef.current)
-    seekTimeoutRef.current = setTimeout(() => doSeekTo(value), DEBOUNCE_SEEK_MILLIS)
+    seekTimeoutRef.current = setTimeout(() => {
+      doSeekTo(value)
+    }, DEBOUNCE_SEEK_MILLIS)
   }, [])
 
   const stopSeeking = useCallback(() => {
@@ -248,16 +258,20 @@ export default ({ source, onError = warn }) => {
     if (cacheBuster == null) return
 
     const set = async () => {
-      const sliderPosition = seekRef.current
-      const position = toPosition({ sliderPosition, duration })
+      if (isCanceled()) return
+
+      const progress = seekRef.current
+      const position = toPosition({ progress, duration })
       try {
-        await sound.setPosition(position).catch(onError)
+        await sound.setPosition(position).catch(guard(onError))
       } catch (err) {
         console.error('failed to set position', err.message)
         return
       }
 
-      if (seekRef.current === sliderPosition) {
+      if (isCanceled()) return
+
+      if (seekRef.current === progress) {
         playIfWasPlayingWhenSeekStarted()
       } else {
         // requests got queued up, try again

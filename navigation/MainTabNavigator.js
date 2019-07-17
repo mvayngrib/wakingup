@@ -11,6 +11,8 @@ import theme from '../theme'
 import modalTransition from './modal-transition'
 import Lesson from '~/containers/Lesson'
 
+import mocks from '~/mocks'
+
 const tabNavigator = createBottomTabNavigator(
   {
     Home,
@@ -51,13 +53,16 @@ const modalNavigator = createStackNavigator(
       screen: (props) => {
         const { params } = props.navigation.state
         if (params.screen === 'Lesson') {
-          return <Lesson {...props} onClose={useCallback(() => props.navigation.goBack())} />
+          const onClose = useCallback(() => props.navigation.goBack(), [props.navigation])
+          return <Lesson {...props} onClose={onClose} />
         }
       },
     },
   },
   {
     mode: 'modal',
+    // initialRouteName: 'Modal',
+    // initialRouteParams: { screen: 'Lesson', lesson: mocks.lessons[0] },
     defaultNavigationOptions: {
       header: null,
     },

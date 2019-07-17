@@ -27,6 +27,10 @@ const Button = ({
   right,
   black,
   white,
+  marginTop,
+  marginBottom,
+  marginLeft,
+  marginRight,
   style,
   ...props
 }) => {
@@ -48,6 +52,10 @@ const Button = ({
     typeof right === 'number' && { right },
     black && Styles.bg.black,
     white && Styles.bg.white,
+    marginTop != null && { marginTop },
+    marginBottom != null && { marginBottom },
+    marginLeft != null && { marginLeft },
+    marginRight != null && { marginRight },
     style,
   ]
 

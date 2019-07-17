@@ -1,6 +1,7 @@
 import React from 'react'
 import { Text as RNText } from 'react-native'
 import Styles from '~/styles'
+import { makeExtendable } from '~/hoc/with-props'
 
 const Text = ({
   size,
@@ -75,9 +76,7 @@ const Text = ({
   return <RNText style={styles} {...props} />
 }
 
-Text.withProps = (defaults) => (props) => <Text {...defaults} {...props} />
-
-export default Text
+export default makeExtendable(Text)
 
 export { Text }
 

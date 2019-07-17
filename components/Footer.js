@@ -1,10 +1,11 @@
-import React from 'react'
-import styled from 'shakl'
 import SafeBlock from 'components/SafeBlock'
 
 // TODO
-export default styled(SafeBlock)().attrs({
+const Footer = SafeBlock.withProps({
   fixed: true,
   bottom: 0,
-  horizontal: true,
 })
+
+Footer.displayName = 'Footer'
+
+export default Footer

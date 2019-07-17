@@ -2,6 +2,7 @@ const sizes = {
   // rest
   base: 12,
   padding: 15,
+  // screen horizontal margin
   margin: 15,
 }
 
@@ -20,6 +21,7 @@ const colors = {
   // see gradient on primary action button
   primary: '#6699EA',
   secondary: '#90B0E5',
+  ternary: '#2C4384',
   black: '#050105',
   white,
   gray,
